@@ -1,4 +1,4 @@
-;;; keepass-mode.el --- Mode for KeePass DB  -*- lexical-binding: t; coding: utf-8 -*-
+;;; keepass-utils.el --- Helper and utility functions for KeePass mode  -*- lexical-binding: t; coding: utf-8 -*-
 ;;
 ;; Copyright (C) 2019  Ignasi Fosch
 ;;
@@ -27,32 +27,33 @@
 
 ;;; Code:
 
-(require 'keepass)
+(defvar keepass-db "")
+(defvar keepass-password "")
 
-(defvar keepass-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "RET") 'keepass-select)
-    (define-key map (kbd "<backspace>") 'keepass-group-back)
-    (define-key map (kbd "c") 'keepass-copy-password)
-   map))
+(defun kpu--read-data-from-string (input)
+  "Read data from INPUT string into an alist."
+  (mapcar
+    (lambda (arg) (split-string arg ":" nil " "))
+    (split-string input "\n")))
 
-;;;###autoload
-(define-derived-mode keepass-mode tabulated-list-mode "KeePass mode"
-  "KeePass mode."
-  (setq keepass-db buffer-file-truename)
-  (setq keepass-password (keepass-ask-password))
-  (setq keepass-group-path "")
-  (kill-buffer)
-  (switch-to-buffer (format "*KeePass %s*" keepass-db))
-  (use-local-map keepass-mode-map)
-  (make-local-variable 'keepass-db)
-  (make-local-variable 'keepass-password)
-  (make-local-variable 'keepass-group-path)
-  (setq keepass-group-path (keepass-open nil)))
+(defun kpu--get-value-from-alist (key alist)
+  "Get the value for KEY from the ALIST."
+  (car (cdr (assoc key alist))))
 
-(add-to-list 'auto-mode-alist '("\\.kdbx\\'" . keepass-mode))
-(add-to-list 'auto-mode-alist '("\\.kdb\\'" . keepass-mode))
+(defun kpu--get-field (field entry)
+  "Get FIELD from an ENTRY."
+  (kpu--get-value-from-alist field (kpu--read-data-from-string entry)))
 
-(provide 'keepass-mode)
+(defun kpu--command (group command)
+  "Generate KeePass COMMAND to run, on GROUP."
+  (format "echo %s | \
+           keepassxc-cli %s %s %s | \
+           grep -v 'Insert password to unlock'"
+          keepass-password
+          command
+          keepass-db
+          group))
 
-;;; keepass-mode.el ends here
+(provide 'keepass-utils)
+
+;;; keepass-utils.el ends here
