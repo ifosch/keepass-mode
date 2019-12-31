@@ -29,11 +29,28 @@
 
 (require 'keepass)
 
+(defun kpm-select ()
+  "Select an entry in current Keepass key."
+  (interactive)
+  (let ((entry (aref (tabulated-list-get-entry) 0)))
+    (keepass-select entry)))
+
+(defun kpm-back ()
+  "Navigate back in group tree."
+  (interactive)
+  (keepass-back))
+
+(defun kpm-copy-password ()
+  "Copy current entry password to clipboard."
+  (interactive)
+  (let ((entry (aref (tabulated-list-get-entry) 0)))
+    (keepass-copy-password entry)))
+
 (defvar keepass-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "RET") 'keepass-select)
-    (define-key map (kbd "<backspace>") 'keepass-group-back)
-    (define-key map (kbd "c") 'keepass-copy-password)
+    (define-key map (kbd "RET") 'kpm-select)
+    (define-key map (kbd "<backspace>") 'kpm-back)
+    (define-key map (kbd "c") 'kpm-copy-password)
    map))
 
 ;;;###autoload

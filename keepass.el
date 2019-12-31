@@ -30,28 +30,23 @@
 (require 'keepass-utils)
 (defvar keepass-group-path "")
 
-(defun keepass-select ()
-  "Select an entry in current Keepass key."
-  (interactive)
-  (let ((entry (aref (tabulated-list-get-entry) 0)))
-    (if (string-suffix-p "/" entry)
+(defun keepass-select (entry)
+  "Select ENTRY in current KeePass DB."
+  (if (string-suffix-p "/" entry)
       (setq keepass-group-path (keepass-open entry))
-      (keepass-show entry))))
+      (keepass-show entry)))
 
-(defun keepass-group-back ()
+(defun keepass-back ()
   "Navigate back in group tree."
-  (interactive)
   (setq keepass-group-path (mapconcat 'identity (butlast (split-string keepass-group-path "/" t) 1) "/"))
   (keepass-open nil))
 
-(defun keepass-copy-password ()
-  "Copy current entry password to clipboard."
-  (interactive)
-  (let ((entry (aref (tabulated-list-get-entry) 0)))
-    (if (string-suffix-p "/" entry)
+(defun keepass-copy-password (entry)
+  "Copy ENTRY password to clipboard."
+  (if (string-suffix-p "/" entry)
       (message (format "%s is a group, not an entry" entry))
       (progn (kill-new (kpu--get-field "Password" (shell-command-to-string (kpu--command (format "'%s'" entry) "show"))))
-             (message (format "Password for '%s%s' copied to kill-ring" keepass-group-path entry))))))
+             (message (format "Password for '%s%s' copied to kill-ring" keepass-group-path entry)))))
 
 (defun keepass-ask-password ()
   "Ask the user for the password."
