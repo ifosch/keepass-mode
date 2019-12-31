@@ -30,54 +30,25 @@
 (require 'keepass-utils)
 (defvar keepass-group-path "")
 
-(defun keepass-select (entry)
-  "Select ENTRY in current KeePass DB."
-  (if (string-suffix-p "/" entry)
-      (setq keepass-group-path (keepass-open entry))
-      (keepass-show entry)))
-
-(defun keepass-back ()
-  "Navigate back in group tree."
-  (setq keepass-group-path (mapconcat 'identity (butlast (split-string keepass-group-path "/" t) 1) "/"))
-  (keepass-open nil))
-
-(defun keepass-copy-password (entry)
-  "Copy ENTRY password to clipboard."
-  (if (string-suffix-p "/" entry)
-      (message (format "%s is a group, not an entry" entry))
-      (progn (kill-new (kpu--get-field "Password" (shell-command-to-string (kpu--command (kpu--quote-unless-empty entry) "show"))))
-             (message (format "Password for '%s%s' copied to kill-ring" keepass-group-path entry)))))
-
-(defun keepass-ask-password ()
-  "Ask the user for the password."
-  (read-passwd (format "Password for %s: " keepass-db)))
+(defun keepass-get-password (entry)
+  "Retrieve password for ENTRY."
+  (kpu--get-field "Password" (shell-command-to-string (kpu--command (kpu--quote-unless-empty entry) "show"))))
 
 (defun keepass-get-entries (group)
   "Get entry list for GROUP."
-  (nbutlast (split-string (shell-command-to-string (kpu--command group "ls")) "\n") 1))
+  (nbutlast (split-string (shell-command-to-string (kpu--command (kpu--quote-unless-empty group) "ls")) "\n") 1))
 
 (defun keepass-concat-group-path (group)
   "Concat GROUP and group path."
   (format "%s%s" keepass-group-path (or group "")))
 
-(defun keepass-open (group)
-  "Open a Keepass file at GROUP."
-  (let ((columns [("Key" 100)])
-        (rows (mapcar (lambda (x) `(nil [,x]))
-    (setq tabulated-list-format columns)
-    (setq tabulated-list-entries rows)
-    (tabulated-list-init-header)
-    (tabulated-list-print)
-              (keepass-get-entries (kpu--quote-unless-empty (keepass-concat-group-path group))))))
-    (keepass-concat-group-path group)))
+(defun keepass-update-group-path (group)
+  "Update group-path with GROUP."
+  (setq keepass-group-path group))
 
-(defun keepass-show (group)
-  "Show a Keepass entry at GROUP."
-  (let* ((entry (keepass-concat-group-path group))
-        (output (shell-command-to-string (kpu--command (kpu--quote-unless-empty entry) "show"))))
-    (switch-to-buffer (format "*keepass %s %s*" keepass-db entry))
-    (insert (replace-regexp-in-string "Password: .+" "Password: ************" output))
-    (read-only-mode)))
+(defun keepass-get-entry (entry)
+  "Get ENTRY details."
+  (shell-command-to-string (kpu--command (kpu--quote-unless-empty entry) "show")))
 
 (provide 'keepass)
 

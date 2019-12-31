@@ -58,6 +58,10 @@
   "Quote TEXT unless it's empty."
   (if (= (length text) 0) text (format "'%s'" text)))
 
+(defun kpu--is-group (entry)
+  "Return if ENTRY is a group."
+  (string-suffix-p "/" entry))
+
 (provide 'keepass-utils)
 
 ;;; keepass-utils.el ends here

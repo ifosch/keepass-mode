@@ -33,18 +33,48 @@
   "Select an entry in current Keepass key."
   (interactive)
   (let ((entry (aref (tabulated-list-get-entry) 0)))
-    (keepass-select entry)))
+    (if (kpu--is-group entry)
+        (progn
+          (keepass-update-group-path (keepass-concat-group-path entry))
+          (kpm-open))
+      (kpm-show entry))))
 
 (defun kpm-back ()
   "Navigate back in group tree."
   (interactive)
-  (keepass-back))
+  (keepass-update-group-path (mapconcat 'identity (butlast (split-string keepass-group-path "/" t) 1) "/"))
+  (kpm-open))
 
 (defun kpm-copy-password ()
   "Copy current entry password to clipboard."
   (interactive)
   (let ((entry (aref (tabulated-list-get-entry) 0)))
-    (keepass-copy-password entry)))
+    (if (kpu--is-group entry)
+        (message (format "%s is a group, not an entry" entry))
+      (progn (kill-new (keepass-get-password entry))
+             (message (format "Password for '%s%s' copied to kill-ring" keepass-group-path entry))))))
+
+(defun kpm-open ()
+  "Open a Keepass file at GROUP."
+  (let ((columns [("Key" 100)])
+        (rows (mapcar (lambda (x) `(nil [,x]))
+                      (keepass-get-entries keepass-group-path))))
+    (setq tabulated-list-format columns)
+    (setq tabulated-list-entries rows)
+    (tabulated-list-init-header)
+    (tabulated-list-print)))
+
+(defun kpm-ask-password ()
+  "Ask the user for the password."
+  (read-passwd (format "Password for %s: " keepass-db)))
+
+(defun kpm-show (group)
+  "Show a Keepass entry at GROUP."
+  (let* ((entry (keepass-concat-group-path group))
+        (output (replace-regexp-in-string "Password: .+" "Password: *************" (keepass-get-entry entry))))
+    (switch-to-buffer (format "*keepass %s %s*" keepass-db entry))
+    (insert output)
+    (read-only-mode)))
 
 (defvar keepass-mode-map
   (let ((map (make-sparse-keymap)))
@@ -56,7 +86,7 @@
 (define-derived-mode keepass-mode tabulated-list-mode "KeePass mode"
   "KeePass mode."
   (setq keepass-db buffer-file-truename)
-  (setq keepass-password (keepass-ask-password))
+  (setq keepass-password (kpm-ask-password))
   (setq keepass-group-path "")
   (kill-buffer)
   (switch-to-buffer (format "*KeePass %s*" keepass-db))
@@ -64,7 +94,7 @@
   (make-local-variable 'keepass-db)
   (make-local-variable 'keepass-password)
   (make-local-variable 'keepass-group-path)
-  (setq keepass-group-path (keepass-open nil)))
+  (kpm-open))
 
 (add-to-list 'auto-mode-alist '("\\.kdbx\\'" . keepass-mode))
 (add-to-list 'auto-mode-alist '("\\.kdb\\'" . keepass-mode))
