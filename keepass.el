@@ -45,7 +45,7 @@
   "Copy ENTRY password to clipboard."
   (if (string-suffix-p "/" entry)
       (message (format "%s is a group, not an entry" entry))
-      (progn (kill-new (kpu--get-field "Password" (shell-command-to-string (kpu--command (format "'%s'" entry) "show"))))
+      (progn (kill-new (kpu--get-field "Password" (shell-command-to-string (kpu--command (kpu--quote-unless-empty entry) "show"))))
              (message (format "Password for '%s%s' copied to kill-ring" keepass-group-path entry)))))
 
 (defun keepass-ask-password ()
@@ -57,7 +57,7 @@
   (let ((columns [("Key" 100)])
         (rows (mapcar (lambda (x) `(nil [,x]))
               (split-string (shell-command-to-string (kpu--command
-                (format "'%s%s'" keepass-group-path (or group "")) "ls")) "\n"))))
+                (kpu--quote-unless-empty (format "%s%s" keepass-group-path (or group ""))) "ls")) "\n"))))
     (setq tabulated-list-format columns)
     (setq tabulated-list-entries rows)
     (insert (format "%s%s" keepass-group-path (or group "")))
@@ -68,7 +68,7 @@
 (defun keepass-show (group)
   "Show a Keepass entry at GROUP."
   (let* ((entry (format "%s%s" (if (boundp 'keepass-group-path) keepass-group-path "") (or group "")))
-        (output (shell-command-to-string (kpu--command (format "'%s'" entry) "show"))))
+        (output (shell-command-to-string (kpu--command (kpu--quote-unless-empty entry) "show"))))
     (switch-to-buffer (format "*keepass %s %s*" keepass-db entry))
     (insert (replace-regexp-in-string "Password: .+" "Password: ************" output))
     (read-only-mode)))

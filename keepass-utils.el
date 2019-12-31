@@ -54,6 +54,10 @@
           keepass-db
           group))
 
+(defun kpu--quote-unless-empty (text)
+  "Quote TEXT unless it's empty."
+  (if (= (length text) 0) text (format "'%s'" text)))
+
 (provide 'keepass-utils)
 
 ;;; keepass-utils.el ends here
