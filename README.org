@@ -1,0 +1,23 @@
+* keepass-mode
+
+** Introduction
+This provides an Emacs major mode to open KeePass DB files,
+navigate through them, show their entries, and copy the passwords to
+the clipboard.
+
+I've been using it for some months without major issues, but the code
+is not tested, not very well structured, and should be improved with
+CI/CD.
+
+** Requirements
+This Emacs mode requires you to have `keepassxc-cli` in your `PATH`.
+You can get this program installed by visiting [[https://keepassxc.org/][KeePassXC web page]].
+
+** Install
+You just need to clone this repository into your `~/.emacs.d/elpa` as
+`keepass-20190830.0001`, and then add the following lines to your
+`~/.emacs.d/init.el`:
+
+#+BEGIN_EXAMPLE
+(require 'keepass-mode)
+#+END_EXAMPLE
