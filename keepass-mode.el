@@ -53,7 +53,6 @@
     (define-key map (kbd "c") 'kpm-copy-password)
    map))
 
-;;;###autoload
 (define-derived-mode keepass-mode tabulated-list-mode "KeePass mode"
   "KeePass mode."
   (setq keepass-db buffer-file-truename)
