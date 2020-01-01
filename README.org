@@ -20,5 +20,13 @@ You just need to clone this repository into your `~/.emacs.d/elpa` as
 `~/.emacs.d/init.el`:
 
 #+BEGIN_EXAMPLE
-(require 'keepass-mode)
-#+END_EXAMPLE
+(require 'keepass-mode) #+END_EXAMPLE
+** Development
+*** Setup
+You'll need to get [Cask](https://github.com/cask/cask) setup in your development machine.  Once
+you cloned this repository, you'll need to run `cask` in your working
+copy.
+
+** Run tests
+To run tests on your code, you can use `cask exec buttercup -L .`,
+from a terminal in the repository root.
