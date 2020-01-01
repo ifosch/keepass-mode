@@ -10,23 +10,43 @@ is not tested, not very well structured, and should be improved with
 CI/CD.
 
 ** Requirements
-This Emacs mode requires you to have `keepassxc-cli` in your `PATH`.
-You can get this program installed by visiting
-[[https://keepassxc.org/][KeePassXC web page]].
+This Emacs mode requires you to have ~keepassxc-cli~ in your ~$PATH~.
+You can get this program installed by visiting [[https://keepassxc.org/][KeePassXC web page]].
 
 ** Install
-You just need to clone this repository into your `~/.emacs.d/elpa` as
-`keepass-20190830.0001`, and then add the following lines to your
-`~/.emacs.d/init.el`:
+You just need to clone this repository into your ~$HOME/.emacs.d/elpa~
+as ~keepass-20200101-001~, and then add the following line to your
+~$HOME/.emacs.d/init.el~:
 
 #+BEGIN_EXAMPLE
-(require 'keepass-mode) #+END_EXAMPLE
+(require 'keepass-mode)
+#+END_EXAMPLE
+
+** Usage
+*** Open a KeePass DB
+Open a file using standard ~C-x C-f~, and you'll be asked for the
+KeePass DB's master password.  On a successful password, it will show
+you the root group for your KeePass DB.
+
+*** Navigate through your KeePass DB
+You can use arrows to move up and down the entry list.  When clicking
+~RET~, you'll open the entry. If it was a group, you'll get the entry
+list refreshed with the entry's entry list. If it was a key entry,
+then you'll get a new buffer open with its details.
+
+To go back from a group, you must use ~<backspace>~. To close an entry
+detail view, you can use standard buffer kill, i.e. ~C-x C-k~.
+
+*** Copy entry's password
+When having your point on a key entry, you can copy its password to
+the kill ring using ~c~.
+
 ** Development
 *** Setup
-You'll need to get [Cask](https://github.com/cask/cask) setup in your development machine.  Once
-you cloned this repository, you'll need to run `cask` in your working
+You'll need to get [[https://github.com/cask/cask][Cask]] setup in your development machine.  Once you
+cloned this repository, you'll need to run ~cask~ in your working
 copy.
 
-** Run tests
-To run tests on your code, you can use `cask exec buttercup -L .`,
+*** Run tests
+To run tests on your code, you can use ~cask exec buttercup -L .~,
 from a terminal in the repository root.
