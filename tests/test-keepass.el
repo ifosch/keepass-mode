@@ -6,6 +6,7 @@
 ;; Keywords: keepass passwod tools
 ;; Version: 0.0.1
 ;; Homepage: https://github.com/ifosch/keepass-mode
+;; Package-Requires: ((emacs "27"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -21,6 +22,8 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+
+;; These are the tests for the keepass.el functions.
 
 ;;; Code:
 
@@ -50,12 +53,10 @@
                       '("root@home"))))
 
 (describe "keepass-concat-group-path"
-          (xit "requires basic functionality testing")
-          )
+          (xit "requires basic functionality testing"))
 
 (describe "keepass-update-group-path"
-          (xit "requires basic functionality testing")
-          )
+          (xit "requires basic functionality testing"))
 
 (describe "keepass-get-entry"
           (it "returns an entry details"

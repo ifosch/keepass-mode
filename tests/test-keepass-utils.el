@@ -6,6 +6,7 @@
 ;; Keywords: keepass passwod tools
 ;; Version: 0.0.1
 ;; Homepage: https://github.com/ifosch/keepass-mode
+;; Package-Requires: ((emacs "27"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -22,6 +23,8 @@
 
 ;;; Commentary:
 
+;; These are the tests for the keepass-utils.el functions.
+
 ;;; Code:
 
 (require 'keepass-utils)
@@ -29,28 +32,22 @@
 (setq keepass-password "test")
 (setq keepass-db "tests/fixtures/test.kdbx")
 
-(describe "kpu--read-data-from-string"
-          (xit "requires basic functionality testing")
-          )
+(describe "keepass-utils-read-data-from-string"
+          (xit "requires basic functionality testing"))
 
-(describe "kpu--get-value-from-a-list"
-          (xit "requires basic functionality testing")
-          )
+(describe "keepass-utils-get-value-from-a-list"
+          (xit "requires basic functionality testing"))
 
-(describe "kpu--get-field"
-          (xit "requires basic functionality testing")
-          )
+(describe "keepass-utils-get-field"
+          (xit "requires basic functionality testing"))
 
-(describe "kpu--command"
-          (xit "requires basic functionality testing")
-          )
+(describe "keepass-utils-command"
+          (xit "requires basic functionality testing"))
 
-(describe "kpu--quote-unless-empty"
-          (xit "requires basic functionality testing")
-          )
+(describe "keepass-utils-quote-unless-empty"
+          (xit "requires basic functionality testing"))
 
-(describe "kpu--is-group"
-          (xit "requires basic functionality testing")
-          )
+(describe "keepass-utils-is-group"
+          (xit "requires basic functionality testing"))
 
 ;;; test-keepass-utils.el ends here
