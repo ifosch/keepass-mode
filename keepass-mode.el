@@ -37,7 +37,7 @@
   "Select an entry in current Keepass key."
   (interactive)
   (let ((entry (aref (tabulated-list-get-entry) 0)))
-    (if (keepass-mode-is-group entry)
+    (if (keepass-mode-is-group-p entry)
         (progn
           (keepass-mode-update-group-path (keepass-mode-concat-group-path entry))
           (keepass-mode-open))
@@ -53,7 +53,7 @@
   "Copy current entry password to clipboard."
   (interactive)
   (let ((entry (aref (tabulated-list-get-entry) 0)))
-    (if (keepass-mode-is-group entry)
+    (if (keepass-mode-is-group-p entry)
         (message (format "%s is a group, not an entry" entry))
       (progn (kill-new (keepass-mode-get-password entry))
              (message (format "Password for '%s%s' copied to kill-ring" keepass-mode-group-path entry))))))
@@ -151,7 +151,7 @@
     (lambda (arg) (split-string arg ":" nil " "))
     (split-string input "\n")))
 
-(defun keepass-mode-is-group (entry)
+(defun keepass-mode-is-group-p (entry)
   "Return if ENTRY is a group."
   (string-suffix-p "/" entry))
 

@@ -80,7 +80,7 @@
 (describe "keepass-mode-read-data-from-string"
           (xit "requires basic functionality testing"))
 
-(describe "keepass-mode-is-group"
+(describe "keepass-mode-is-group-p"
           (xit "requires basic functionality testing"))
 
 ;;; test-keepass-mode.el ends here
