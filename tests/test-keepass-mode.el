@@ -1,4 +1,4 @@
-;;; test-keepass.el -- Tests for keepass.el -*-lexical-binding:t; coding: utf-8 -*-
+;;; test-keepass-mode.el -- Tests for keepass-mode.el -*-lexical-binding:t; coding: utf-8 -*-
 
 ;; Copyright (C) 2019  Ignasi Fosch
 
@@ -27,41 +27,60 @@
 
 ;;; Code:
 
-(require 'keepass)
+(require 'keepass-mode)
 
-(setq keepass-password "test")
-(setq keepass-db "tests/fixtures/test.kdbx")
+(setq keepass-mode-password "test")
+(setq keepass-mode-db "tests/fixtures/test.kdbx")
 
-(describe "keepass-get-password"
+(describe "keepass-mode-get-password"
           (it "returns the password for an entry"
-              (expect (keepass-get-password "Internet/Some site")
+              (expect (keepass-mode-get-password "Internet/Some site")
                       :to-equal
                       "s0m3s1t3")))
 
-(describe "keepass-get-entries"
+(describe "keepass-mode-get-entries"
           (it "returns the entries for the root group"
-              (expect (keepass-get-entries "")
+              (expect (keepass-mode-get-entries "")
                       :to-equal
                       '("Internet/" "SSH Keys/")))
           (it "returns the entries for a group with space in name"
-              (expect (keepass-get-entries "SSH Keys/")
+              (expect (keepass-mode-get-entries "SSH Keys/")
                       :to-equal
                       '("username@github.com" "Servers/")))
           (it "returns the entries for a second-level group"
-              (expect (keepass-get-entries "SSH Keys/Servers/")
+              (expect (keepass-mode-get-entries "SSH Keys/Servers/")
                       :to-equal
                       '("root@home"))))
 
-(describe "keepass-concat-group-path"
+(describe "keepass-mode-concat-group-path"
           (xit "requires basic functionality testing"))
 
-(describe "keepass-update-group-path"
+(describe "keepass-mode-update-group-path"
           (xit "requires basic functionality testing"))
 
-(describe "keepass-get-entry"
+(describe "keepass-mode-get-entry"
           (it "returns an entry details"
-              (expect (keepass-get-entry "Internet/Some site")
+              (expect (keepass-mode-get-entry "Internet/Some site")
                       :to-equal
                       "Title: Some site\nUserName: username\nPassword: s0m3s1t3\nURL: https://somesite.com\nNotes: \n")))
 
-;;; test-keepass.el ends here
+(describe "keepass-mode-get-field"
+          (xit "requires basic functionality testing"))
+
+
+(describe "keepass-mode-command"
+          (xit "requires basic functionality testing"))
+
+(describe "keepass-mode-quote-unless-empty"
+          (xit "requires basic functionality testing"))
+
+(describe "keepass-mode-get-value-from-a-list"
+          (xit "requires basic functionality testing"))
+
+(describe "keepass-mode-read-data-from-string"
+          (xit "requires basic functionality testing"))
+
+(describe "keepass-mode-is-group"
+          (xit "requires basic functionality testing"))
+
+;;; test-keepass-mode.el ends here
