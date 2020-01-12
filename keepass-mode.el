@@ -3,7 +3,7 @@
 ;; Copyright (C) 2019  Ignasi Fosch
 
 ;; Author: Ignasi Fosch <natx@y10k.ws>
-;; Keywords: keepass password tools
+;; Keywords: data files tools
 ;; Version: 0.0.1
 ;; Homepage: https://github.com/ifosch/keepass-mode
 ;; Package-Requires: ((emacs "27"))
