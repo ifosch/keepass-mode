@@ -52,35 +52,10 @@
                       :to-equal
                       '("root@home"))))
 
-(describe "keepass-mode-concat-group-path"
-          (xit "requires basic functionality testing"))
-
-(describe "keepass-mode-update-group-path"
-          (xit "requires basic functionality testing"))
-
 (describe "keepass-mode-get-entry"
           (it "returns an entry details"
               (expect (keepass-mode-get-entry "Internet/Some site")
                       :to-equal
                       "Title: Some site\nUserName: username\nPassword: s0m3s1t3\nURL: https://somesite.com\nNotes: \n")))
-
-(describe "keepass-mode-get-field"
-          (xit "requires basic functionality testing"))
-
-
-(describe "keepass-mode-command"
-          (xit "requires basic functionality testing"))
-
-(describe "keepass-mode-quote-unless-empty"
-          (xit "requires basic functionality testing"))
-
-(describe "keepass-mode-get-value-from-a-list"
-          (xit "requires basic functionality testing"))
-
-(describe "keepass-mode-read-data-from-string"
-          (xit "requires basic functionality testing"))
-
-(describe "keepass-mode-is-group-p"
-          (xit "requires basic functionality testing"))
 
 ;;; test-keepass-mode.el ends here
