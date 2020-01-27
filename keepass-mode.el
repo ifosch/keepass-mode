@@ -132,7 +132,7 @@
   (format "echo %s | \
            keepassxc-cli %s %s %s | \
            grep -v 'Insert password to unlock'"
-          keepass-mode-password
+          (shell-quote-argument keepass-mode-password)
           command
           keepass-mode-db
           group))
