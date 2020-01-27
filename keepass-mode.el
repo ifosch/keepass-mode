@@ -54,9 +54,9 @@
   (interactive)
   (let ((entry (aref (tabulated-list-get-entry) 0)))
     (if (keepass-mode-is-group-p entry)
-        (message (format "%s is a group, not an entry" entry))
+        (message "%s is a group, not an entry" entry)
       (progn (kill-new (keepass-mode-get-password entry))
-             (message (format "Password for '%s%s' copied to kill-ring" keepass-mode-group-path entry))))))
+             (message "Password for '%s%s' copied to kill-ring" keepass-mode-group-path entry)))))
 
 (defun keepass-mode-open ()
   "Open a Keepass file at GROUP."
