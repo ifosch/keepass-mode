@@ -88,7 +88,7 @@
    map))
 
 ;;;###autoload
-(define-derived-mode keepass-mode tabulated-list-mode "KeePass mode"
+(define-derived-mode keepass-mode tabulated-list-mode "KeePass"
   "KeePass mode."
   (setq keepass-mode-db buffer-file-truename)
   (setq keepass-mode-password (keepass-mode-ask-password))
