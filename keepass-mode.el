@@ -29,9 +29,9 @@
 
 ;;; Code:
 
-(defvar keepass-mode-db "")
-(defvar keepass-mode-password "")
-(defvar keepass-mode-group-path "")
+(defvar-local keepass-mode-db "")
+(defvar-local keepass-mode-password "")
+(defvar-local keepass-mode-group-path "")
 
 (defun keepass-mode-select ()
   "Select an entry in current Keepass key."
@@ -89,13 +89,10 @@
 
 ;;;###autoload
 (define-derived-mode keepass-mode tabulated-list-mode "KeePass"
-  "KeePass mode."
-  (setq keepass-mode-db buffer-file-truename)
-  (setq keepass-mode-password (keepass-mode-ask-password))
-  (setq keepass-mode-group-path "")
-  (make-local-variable 'keepass-mode-db)
-  (make-local-variable 'keepass-mode-password)
-  (make-local-variable 'keepass-mode-group-path)
+  "KeePass mode for interacting with the KeePass DB. \\{keepass-mode-map}."
+  (setq-local keepass-mode-db buffer-file-truename)
+  (setq-local keepass-mode-password (keepass-mode-ask-password))
+  (setq-local keepass-mode-group-path "")
   (keepass-mode-open))
 
 (add-to-list 'auto-mode-alist '("\\.kdbx\\'" . keepass-mode))
