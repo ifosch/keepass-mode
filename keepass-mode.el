@@ -1,10 +1,10 @@
 ;;; keepass-mode.el --- Mode to open Keepass DB  -*- lexical-binding: t; coding: utf-8 -*-
 
-;; Copyright (C) 2019  Ignasi Fosch
+;; Copyright (C) 2020  Ignasi Fosch
 
 ;; Author: Ignasi Fosch <natx@y10k.ws>
 ;; Keywords: data files tools
-;; Version: 0.0.1
+;; Version: 0.0.3
 ;; Homepage: https://github.com/ifosch/keepass-mode
 ;; Package-Requires: ((emacs "27"))
 
@@ -100,7 +100,7 @@
 
 (defun keepass-mode-get-password (entry)
   "Retrieve password for ENTRY."
-  (keepass-mode-get-field "Password" (shell-command-to-string (keepass-mode-command (keepass-mode-quote-unless-empty entry) "show"))))
+  (keepass-mode-get-field "Password" (shell-command-to-string (keepass-mode-command (keepass-mode-quote-unless-empty entry) "show -s"))))
 
 (defun keepass-mode-get-entries (group)
   "Get entry list for GROUP."

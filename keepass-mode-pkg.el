@@ -1,10 +1,10 @@
 ;;; keepass-mode-pkg.el --- Mode for KeePass DB  -*- lexical-binding: t; coding: utf-8 -*-
 
-;; Copyright (C) 2019  Ignasi Fosch
+;; Copyright (C) 2020  Ignasi Fosch
 
 ;; Author: Ignasi Fosch <natx@y10k.ws>
 ;; Keywords: keepass password tools
-;; Version: 0.0.1
+;; Version: 0.0.3
 ;; Homepage: https://github.com/ifosch/keepass-mode
 ;; Package-Requires: ((emacs "27"))
 
@@ -29,7 +29,7 @@
 
 ;;; Code:
 
-(define-package "keepass-mode" "0.0.1"
+(define-package "keepass-mode" "0.0.3"
   "Mode for KeePass DB."
   '((emacs "27"))
   :keywords
