@@ -56,6 +56,6 @@
           (it "returns an entry details"
               (expect (keepass-mode-get-entry "Internet/Some site")
                       :to-equal
-                      "Title: Some site\nUserName: username\nPassword: s0m3s1t3\nURL: https://somesite.com\nNotes: \n")))
+                      "Title: Some site\nUserName: username\nPassword: PROTECTED\nURL: https://somesite.com\nNotes: \n")))
 
 ;;; test-keepass-mode.el ends here
