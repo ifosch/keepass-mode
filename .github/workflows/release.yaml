@@ -1,0 +1,18 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    name: Release to MELPA
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Prepare for release to MELPA
+        run: git config --global user.email "natx@y10k.ws" && git config --global user.name "Ignasi Fosch" && git checkout -b melpa && git rm keepass-mode-pkg.el && git commit -m "Remove -pkg.el"
+      - name: Release to MELPA
+        run: git push --force-with-lease --set-upstream origin melpa
