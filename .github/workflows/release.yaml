@@ -1,0 +1,16 @@
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    name: Release to MELPA
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Prepare for release to MELPA
+        run: git checkout melpa && git rebase master
+      - name: Release to MELPA
+        run: git push
