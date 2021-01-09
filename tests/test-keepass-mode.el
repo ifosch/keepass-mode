@@ -4,7 +4,7 @@
 
 ;; Author: Ignasi Fosch <natx@y10k.ws>
 ;; Keywords: data files tools
-;; Version: 0.0.1
+;; Version: 0.0.4
 ;; Homepage: https://github.com/ifosch/keepass-mode
 ;; Package-Requires: ((emacs "27"))
 
