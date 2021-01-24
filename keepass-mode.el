@@ -139,7 +139,7 @@
 
 (defun keepass-mode-get-value-from-alist (key alist)
   "Get the value for KEY from the ALIST."
-  (car (cdr (assoc key alist))))
+  (mapconcat 'identity (cdr (assoc key alist)) ":"))
 
 (defun keepass-mode-read-data-from-string (input)
   "Read data from INPUT string into an alist."

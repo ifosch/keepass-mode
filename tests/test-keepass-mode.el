@@ -36,7 +36,11 @@
           (it "returns the password for an entry"
               (expect (keepass-mode-get-password "Internet/Some site")
                       :to-equal
-                      "s0m3s1t3")))
+                      "s0m3s1t3"))
+          (it "returns the complete password with :"
+              (expect (keepass-mode-get-password "Internet/Password with :")
+                      :to-equal
+                      "part1:part2")))
 
 (describe "keepass-mode-get-entries"
           (it "returns the entries for the root group"
