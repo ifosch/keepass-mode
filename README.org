@@ -12,8 +12,9 @@
    needs better testing and structure.
 
 ** Requirements
-   This Emacs mode requires you to have ~keepassxc-cli~ in your ~$PATH~.
-   You can get this program installed by visiting [[https://keepassxc.org/][KeePassXC web page]].
+   This Emacs mode requires you to have ~keepassxc-cli~ 2.6.x or
+   newer, in your ~$PATH~.  You can get this program installed by
+   visiting [[https://keepassxc.org/][KeePassXC web page]].
 
 ** Install
    If you use [[https://melpa.org/#/][MELPA]] you'll find it there. Alternatively, you can just
