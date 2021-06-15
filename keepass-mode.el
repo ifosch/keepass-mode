@@ -49,6 +49,15 @@
   (keepass-mode-update-group-path (mapconcat #'identity (butlast (split-string keepass-mode-group-path "/" t) 1) "/"))
   (keepass-mode-open))
 
+(defun keepass-mode-copy-username ()
+  "Copy current entry username to clipboard."
+  (interactive)
+  (let ((entry (aref (tabulated-list-get-entry) 0)))
+    (if (keepass-mode-is-group-p entry)
+        (message "%s is a group, not an entry" entry)
+      (progn (kill-new (keepass-mode-get-username entry))
+             (message "Username for '%s%s' copied to kill-ring" keepass-mode-group-path entry)))))
+
 (defun keepass-mode-copy-password ()
   "Copy current entry password to clipboard."
   (interactive)
@@ -85,6 +94,7 @@
     (define-key map (kbd "RET") 'keepass-mode-select)
     (define-key map (kbd "<backspace>") 'keepass-mode-back)
     (define-key map (kbd "c") 'keepass-mode-copy-password)
+    (define-key map (kbd "b") 'keepass-mode-copy-username)
    map))
 
 ;;;###autoload
@@ -97,6 +107,10 @@
 
 (add-to-list 'auto-mode-alist '("\\.kdbx\\'" . keepass-mode))
 (add-to-list 'auto-mode-alist '("\\.kdb\\'" . keepass-mode))
+
+(defun keepass-mode-get-username (entry)
+  "Retrieve username for ENTRY."
+  (keepass-mode-get-field "UserName" (shell-command-to-string (keepass-mode-command (keepass-mode-quote-unless-empty entry) "show -s"))))
 
 (defun keepass-mode-get-password (entry)
   "Retrieve password for ENTRY."
