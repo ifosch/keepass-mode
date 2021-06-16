@@ -49,6 +49,15 @@
   (keepass-mode-update-group-path (mapconcat #'identity (butlast (split-string keepass-mode-group-path "/" t) 1) "/"))
   (keepass-mode-open))
 
+(defun keepass-mode-copy-url ()
+  "Copy current entry URL to clipboard."
+  (interactive)
+  (let ((entry (aref (tabulated-list-get-entry) 0)))
+    (if (keepass-mode-is-group-p entry)
+        (message "%s is a group, not an entry" entry)
+      (progn (kill-new (keepass-mode-get-url entry))
+             (message "URL for '%s%s' copied to kill-ring" keepass-mode-group-path entry)))))
+
 (defun keepass-mode-copy-username ()
   "Copy current entry username to clipboard."
   (interactive)
@@ -93,8 +102,9 @@
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "RET") 'keepass-mode-select)
     (define-key map (kbd "<backspace>") 'keepass-mode-back)
-    (define-key map (kbd "c") 'keepass-mode-copy-password)
+    (define-key map (kbd "u") 'keepass-mode-copy-url)
     (define-key map (kbd "b") 'keepass-mode-copy-username)
+    (define-key map (kbd "c") 'keepass-mode-copy-password)
    map))
 
 ;;;###autoload
@@ -107,6 +117,10 @@
 
 (add-to-list 'auto-mode-alist '("\\.kdbx\\'" . keepass-mode))
 (add-to-list 'auto-mode-alist '("\\.kdb\\'" . keepass-mode))
+
+(defun keepass-mode-get-url(entry)
+  "Retrieve URL for ENTRY."
+  (keepass-mode-get-field "URL" (shell-command-to-string (keepass-mode-command (keepass-mode-quote-unless-empty entry) "show -s"))))
 
 (defun keepass-mode-get-username (entry)
   "Retrieve username for ENTRY."
