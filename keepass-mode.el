@@ -49,32 +49,28 @@
   (keepass-mode-update-group-path (mapconcat #'identity (butlast (split-string keepass-mode-group-path "/" t) 1) "/"))
   (keepass-mode-open))
 
-(defun keepass-mode-copy-url ()
-  "Copy current entry URL to clipboard."
-  (interactive)
+(defun keepass-mode-copy (field)
+  "Copy current entry field to clipboard."
   (let ((entry (aref (tabulated-list-get-entry) 0)))
     (if (keepass-mode-is-group-p entry)
         (message "%s is a group, not an entry" entry)
-      (progn (kill-new (keepass-mode-get-url entry))
-             (message "URL for '%s%s' copied to kill-ring" keepass-mode-group-path entry)))))
+      (progn (kill-new (keepass-mode-get field entry))
+             (message "%s for '%s%s' copied to kill-ring" field keepass-mode-group-path entry)))))
+
+(defun keepass-mode-copy-url ()
+  "Copy current entry URL to clipboard."
+  (interactive)
+  (keepass-mode-copy "URL"))
 
 (defun keepass-mode-copy-username ()
   "Copy current entry username to clipboard."
   (interactive)
-  (let ((entry (aref (tabulated-list-get-entry) 0)))
-    (if (keepass-mode-is-group-p entry)
-        (message "%s is a group, not an entry" entry)
-      (progn (kill-new (keepass-mode-get-username entry))
-             (message "Username for '%s%s' copied to kill-ring" keepass-mode-group-path entry)))))
+  (keepass-mode-copy "UserName"))
 
 (defun keepass-mode-copy-password ()
   "Copy current entry password to clipboard."
   (interactive)
-  (let ((entry (aref (tabulated-list-get-entry) 0)))
-    (if (keepass-mode-is-group-p entry)
-        (message "%s is a group, not an entry" entry)
-      (progn (kill-new (keepass-mode-get-password entry))
-             (message "Password for '%s%s' copied to kill-ring" keepass-mode-group-path entry)))))
+  (keepass-mode-copy "Password"))
 
 (defun keepass-mode-open ()
   "Open a Keepass file at GROUP."
@@ -118,17 +114,9 @@
 (add-to-list 'auto-mode-alist '("\\.kdbx\\'" . keepass-mode))
 (add-to-list 'auto-mode-alist '("\\.kdb\\'" . keepass-mode))
 
-(defun keepass-mode-get-url(entry)
-  "Retrieve URL for ENTRY."
-  (keepass-mode-get-field "URL" (shell-command-to-string (keepass-mode-command (keepass-mode-quote-unless-empty entry) "show -s"))))
-
-(defun keepass-mode-get-username (entry)
-  "Retrieve username for ENTRY."
-  (keepass-mode-get-field "UserName" (shell-command-to-string (keepass-mode-command (keepass-mode-quote-unless-empty entry) "show -s"))))
-
-(defun keepass-mode-get-password (entry)
-  "Retrieve password for ENTRY."
-  (keepass-mode-get-field "Password" (shell-command-to-string (keepass-mode-command (keepass-mode-quote-unless-empty entry) "show -s"))))
+(defun keepass-mode-get (field entry)
+  "Retrieve field from ENTRY."
+  (keepass-mode-get-field field (shell-command-to-string (keepass-mode-command (keepass-mode-quote-unless-empty entry) "show -s"))))
 
 (defun keepass-mode-get-entries (group)
   "Get entry list for GROUP."
