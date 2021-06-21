@@ -43,8 +43,11 @@
     detail view, you can use standard buffer kill, i.e. ~C-x C-k~.
 
 *** Copy entry's password
-    When having your point on a key entry, you can copy its password to
-    the kill ring using ~c~.
+    When having your point on a key entry, you can copy fields to
+    kill-ring using:
+    - `u`: URL
+    - `b`: user name
+    - `c`: password
 
 ** Development
 *** Setup
