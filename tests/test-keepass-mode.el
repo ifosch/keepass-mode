@@ -34,11 +34,11 @@
 
 (describe "keepass-mode-get-password"
           (it "returns the password for an entry"
-              (expect (keepass-mode-get-password "Internet/Some site")
+              (expect (keepass-mode-get "Password" "Internet/Some site")
                       :to-equal
                       "s0m3s1t3"))
           (it "returns the complete password with :"
-              (expect (keepass-mode-get-password "Internet/Password with :")
+              (expect (keepass-mode-get "Password" "Internet/Password with :")
                       :to-equal
                       "part1:part2")))
 
