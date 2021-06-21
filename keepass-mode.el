@@ -50,7 +50,7 @@
   (keepass-mode-open))
 
 (defun keepass-mode-copy (field)
-  "Copy current entry field to clipboard."
+  "Copy current entry FIELD to clipboard."
   (let ((entry (aref (tabulated-list-get-entry) 0)))
     (if (keepass-mode-is-group-p entry)
         (message "%s is a group, not an entry" entry)
@@ -115,7 +115,7 @@
 (add-to-list 'auto-mode-alist '("\\.kdb\\'" . keepass-mode))
 
 (defun keepass-mode-get (field entry)
-  "Retrieve field from ENTRY."
+  "Retrieve FIELD from ENTRY."
   (keepass-mode-get-field field (shell-command-to-string (keepass-mode-command (keepass-mode-quote-unless-empty entry) "show -s"))))
 
 (defun keepass-mode-get-entries (group)
