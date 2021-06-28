@@ -32,6 +32,18 @@
 (setq keepass-mode-password "test")
 (setq keepass-mode-db "tests/fixtures/test.kdbx")
 
+(describe "keepass-mode-get-URL"
+          (it "returns the URL for an entry"
+              (expect (keepass-mode-get "URL" "Internet/Some site")
+                      :to-equal
+                      "https://somesite.com")))
+
+(describe "keepass-mode-get-username"
+          (it "returns the URL for an entry"
+              (expect (keepass-mode-get "UserName" "Internet/Some site")
+                      :to-equal
+                      "username")))
+
 (describe "keepass-mode-get-password"
           (it "returns the password for an entry"
               (expect (keepass-mode-get "Password" "Internet/Some site")
