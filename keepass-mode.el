@@ -46,7 +46,7 @@
 (defun keepass-mode-back ()
   "Navigate back in group tree."
   (interactive)
-  (keepass-mode-update-group-path (mapconcat #'identity (butlast (split-string keepass-mode-group-path "/" t) 1) "/"))
+  (keepass-mode-update-group-path (replace-regexp-in-string "[^/]*/?$" "" keepass-mode-group-path))
   (keepass-mode-open))
 
 (defun keepass-mode-copy (field)
