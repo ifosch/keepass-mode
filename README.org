@@ -58,3 +58,8 @@
 *** Run tests
     To run tests on your code, you can use ~cask exec buttercup -L .~,
     from a terminal in the repository root.
+
+** Contributors
+*** @ykgoon
+*** @juergenhoetzel
+*** @ifosch
