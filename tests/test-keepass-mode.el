@@ -29,8 +29,8 @@
 
 (require 'keepass-mode)
 
-(setq keepass-mode-password "test")
-(setq keepass-mode-db "tests/fixtures/test.kdbx")
+(setq-default keepass-mode-password "test")
+(setq-default keepass-mode-db "tests/fixtures/test.kdbx")
 
 (describe "keepass-mode-get-URL"
           (it "returns the URL for an entry"
@@ -73,5 +73,17 @@
               (expect (keepass-mode-get-entry "Internet/Some site")
                       :to-equal
                       "Title: Some site\nUserName: username\nPassword: PROTECTED\nURL: https://somesite.com\nNotes: \n")))
+
+(describe "keepass-mode-back in a sub-group"
+          (it "returns the parent-group"
+              (find-file keepass-mode-db)
+              (search-forward-regexp "^SSH Keys")
+              (keepass-mode-select)
+              (search-forward-regexp "^Servers")
+              (keepass-mode-select)
+              (keepass-mode-back)
+              (expect keepass-mode-group-path
+                      :to-equal
+                      "SSH Keys/")))
 
 ;;; test-keepass-mode.el ends here
