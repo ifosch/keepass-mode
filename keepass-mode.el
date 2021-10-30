@@ -107,7 +107,8 @@
 (define-derived-mode keepass-mode tabulated-list-mode "KeePass"
   "KeePass mode for interacting with the KeePass DB. \\{keepass-mode-map}."
   (setq-local keepass-mode-db buffer-file-truename)
-  (setq-local keepass-mode-password (keepass-mode-ask-password))
+  (when (zerop (length keepass-mode-password))
+    (setq-local keepass-mode-password (keepass-mode-ask-password)))
   (setq-local keepass-mode-group-path "")
   (keepass-mode-open))
 
