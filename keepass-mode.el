@@ -141,18 +141,18 @@
 
 (defun keepass-mode-command (group command)
   "Generate KeePass COMMAND to run, on GROUP."
-  (format "echo %s | \
-           keepassxc-cli %s %s %s 2>&1 | \
-           egrep -v '[Insert|Enter] password to unlock %s'"
-          (shell-quote-argument keepass-mode-password)
+  (format "echo %s| \
+           keepassxc-cli %s --quiet %s %s 2>&1"
+          (if (eq system-type 'windows-nt)
+	      keepass-mode-password	;FIX Quoting issues on Windoes: 
+	    (shell-quote-argument keepass-mode-password))
           command
-          keepass-mode-db
-          group
-          keepass-mode-db))
+          (expand-file-name keepass-mode-db)
+          group))
 
 (defun keepass-mode-quote-unless-empty (text)
   "Quote TEXT unless it's empty."
-  (if (= (length text) 0) text (format "'%s'" text)))
+  (if (= (length text) 0) text (format "\"%s\"" text)))
 
 (defun keepass-mode-get-value-from-alist (key alist)
   "Get the value for KEY from the ALIST."
