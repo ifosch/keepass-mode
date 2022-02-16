@@ -31,6 +31,7 @@
 
 (defvar-local keepass-mode-db "")
 (defvar-local keepass-mode-password "")
+(defvar-local keepass-mode-keyfile "")
 (defvar-local keepass-mode-group-path "")
 
 (defun keepass-mode-select ()
@@ -86,6 +87,10 @@
   "Ask the user for the password."
   (read-passwd (format "Password for %s: " keepass-mode-db)))
 
+(defun keepass-mode-ask-keyfile ()
+  "Ask the user for keyfile."
+  (read-passwd (format "Keyfile for %s: " keepass-mode-db)))
+
 (defun keepass-mode-show (group)
   "Show a Keepass entry at GROUP."
   (let* ((entry (keepass-mode-concat-group-path group))
@@ -107,8 +112,11 @@
 (define-derived-mode keepass-mode tabulated-list-mode "KeePass"
   "KeePass mode for interacting with the KeePass DB. \\{keepass-mode-map}."
   (setq-local keepass-mode-db buffer-file-truename)
+  (when (zerop (length keepass-mode-keyfile))
+    (setq-local keepass-mode-keyfile (keepass-mode-ask-keyfile)))
   (when (zerop (length keepass-mode-password))
     (setq-local keepass-mode-password (keepass-mode-ask-password)))
+  
   (setq-local keepass-mode-group-path "")
   (keepass-mode-open))
 
@@ -141,11 +149,20 @@
 
 (defun keepass-mode-command (group command)
   "Generate KeePass COMMAND to run, on GROUP."
-  (format "echo %s | \
-           keepassxc-cli %s %s %s 2>&1 | \
+  (format "%s \
+           keepassxc-cli %s %s %s %s %s 2>&1 | \
            egrep -v '[Insert|Enter] password to unlock %s'"
-          (shell-quote-argument keepass-mode-password)
+          (if keepass-mode-password
+              (format "echo %s | " (shell-quote-argument keepass-mode-password))
+            "")
           command
+          (if (not (string= "" keepass-mode-keyfile))
+              (format "--key-file %s " keepass-mode-keyfile)
+            "")
+          (if (or (string= "" keepass-mode-password)
+                  (not keepass-mode-password))
+              "--no-password "
+            "")
           keepass-mode-db
           group
           keepass-mode-db))
