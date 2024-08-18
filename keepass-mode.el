@@ -29,6 +29,22 @@
 
 ;;; Code:
 
+(defgroup keepass nil
+  "KeePass/KeePassXC integration with Emacs."
+  :group 'convenience
+  :tag "keepass-mode"
+  :prefix "keepass-mode-")
+
+(defcustom keepass-mode-ls-recursive t
+  "Should list entries recursively?
+If nil, it will only show the first level of entries and folders.
+
+Tip: Recursive list may be useful when searching for a key in a buffer with
+\\[isearch-forward] (command `isearch-forward').  However, it may be too slow with a
+large KeePass database file."
+  :type 'boolean
+  :group 'keepass)
+
 (defvar-local keepass-mode-db "")
 (defvar-local keepass-mode-password "")
 (defvar-local keepass-mode-group-path "")
@@ -103,9 +119,20 @@
     (define-key map (kbd "c") 'keepass-mode-copy-password)
    map))
 
+(defface keepass-mode-font-lock-directory
+  '((t (:inherit dired-directory)))
+  "Face used for directory entries."
+  :group 'keepass)
+
+(defconst keepass-mode-font-lock-keywords
+  '(("^.*/" (0 'keepass-mode-font-lock-directory t)))
+  "Font-lock keywords for `keepass-mode'.")
+
 ;;;###autoload
 (define-derived-mode keepass-mode tabulated-list-mode "KeePass"
-  "KeePass mode for interacting with the KeePass DB. \\{keepass-mode-map}."
+  "KeePass mode for interacting with the KeePass DB.
+\\{keepass-mode-map}."
+  (setq-local font-lock-defaults '(keepass-mode-font-lock-keywords nil t))
   (setq-local keepass-mode-db buffer-file-truename)
   (when (zerop (length keepass-mode-password))
     (setq-local keepass-mode-password (keepass-mode-ask-password)))
@@ -115,13 +142,36 @@
 (add-to-list 'auto-mode-alist '("\\.kdbx\\'" . keepass-mode))
 (add-to-list 'auto-mode-alist '("\\.kdb\\'" . keepass-mode))
 
+(defconst keepass-mode-output-buffer "*keepass-mode-command-output*"
+  "Buffer name used for the keepassxc-cli command output.")
+
+(defun keepass-mode-call-command (group command)
+  "Call the keepassxc-cli command and return its output.
+GROUP and COMMAND are passed to `keepass-mode-command'.  They are strings with
+the group to process (the directory) and the keepass command (for example:
+\"ls\", \"show\")."
+  (let ((password (shell-quote-argument keepass-mode-password))
+        (filepath keepass-mode-db))
+    (with-current-buffer (get-buffer-create keepass-mode-output-buffer)
+      (delete-region (point-min) (point-max)))
+    (with-temp-buffer
+      (insert password)
+      (call-shell-region (point-min) (point-max)
+                         (keepass-mode-command group command filepath)
+                         t keepass-mode-output-buffer))
+    (with-current-buffer keepass-mode-output-buffer
+      (buffer-string))))
+
 (defun keepass-mode-get (field entry)
   "Retrieve FIELD from ENTRY."
-  (keepass-mode-get-field field (shell-command-to-string (keepass-mode-command (keepass-mode-quote-unless-empty entry) "show -s"))))
+  (keepass-mode-get-field field (keepass-mode-call-command (keepass-mode-quote-unless-empty entry) "show -s")))
 
 (defun keepass-mode-get-entries (group)
   "Get entry list for GROUP."
-  (nbutlast (split-string (shell-command-to-string (keepass-mode-command (keepass-mode-quote-unless-empty group) "ls")) "\n") 1))
+  (nbutlast (split-string (keepass-mode-call-command (keepass-mode-quote-unless-empty group)
+                                                     (if keepass-mode-ls-recursive
+                                                         "ls -R -f"
+                                                       "ls")) "\n") 1))
 
 (defun keepass-mode-concat-group-path (group)
   "Concat GROUP and group path."
@@ -133,22 +183,20 @@
 
 (defun keepass-mode-get-entry (entry)
   "Get ENTRY details."
-  (shell-command-to-string (keepass-mode-command (keepass-mode-quote-unless-empty entry) "show")))
+  (keepass-mode-call-command (keepass-mode-quote-unless-empty entry) "show"))
 
 (defun keepass-mode-get-field (field entry)
   "Get FIELD from an ENTRY."
   (keepass-mode-get-value-from-alist field (keepass-mode-read-data-from-string entry)))
 
-(defun keepass-mode-command (group command)
+(defun keepass-mode-command (group command &optional db)
   "Generate KeePass COMMAND to run, on GROUP."
-  (format "echo %s | \
-           keepassxc-cli %s %s %s 2>&1 | \
-           egrep -v '[Insert|Enter] password to unlock %s'"
-          (shell-quote-argument keepass-mode-password)
+  (format "keepassxc-cli %s %s %s 2>&1 | \
+           grep -E -v '[Insert|Enter] password to unlock %s'"
           command
-          keepass-mode-db
+          (or db keepass-mode-db)
           group
-          keepass-mode-db))
+          (or db keepass-mode-db)))
 
 (defun keepass-mode-quote-unless-empty (text)
   "Quote TEXT unless it's empty."
