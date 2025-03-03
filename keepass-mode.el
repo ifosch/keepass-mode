@@ -143,7 +143,7 @@
   "Generate KeePass COMMAND to run, on GROUP."
   (format "echo %s | \
            keepassxc-cli %s %s %s 2>&1 | \
-           egrep -v '[Insert|Enter] password to unlock %s'"
+           grep -vE '[Insert|Enter] password to unlock %s'"
           (shell-quote-argument keepass-mode-password)
           command
           keepass-mode-db
